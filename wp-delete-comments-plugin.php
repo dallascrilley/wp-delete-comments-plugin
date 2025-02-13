@@ -17,12 +17,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function wp_delete_comments_plugin_menu(): void {
     add_submenu_page(
-        'tools.php',                     // Parent slug: Tools
+        'tools.php',                     // Parent slug
         'WP Delete Comments',            // Page title
         'WP Delete Comments',            // Menu title
-        'manage_options',                // Capability required
+        'manage_options',                // Capability
         'wp_delete_comments_plugin',     // Menu slug
-        'wp_delete_comments_plugin_page' // Callback to render the page
+        'wp_delete_comments_plugin_page' // Callback function
     );
 }
 add_action( 'admin_menu', 'wp_delete_comments_plugin_menu' );
@@ -31,6 +31,5 @@ add_action( 'admin_menu', 'wp_delete_comments_plugin_menu' );
  * Callback that renders the plugin's admin page
  */
 function wp_delete_comments_plugin_page(): void {
-    // Include the admin page markup (form, etc.).
     require_once plugin_dir_path( __FILE__ ) . 'admin/admin-page.php';
 }

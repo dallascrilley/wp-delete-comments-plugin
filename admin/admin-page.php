@@ -3,24 +3,28 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly.
 }
 
-// Check user capabilities before rendering (optional, but good practice).
+// Check user capabilities before rendering (optional, but recommended).
 if ( ! current_user_can( 'manage_options' ) ) {
     wp_die( __( 'You do not have sufficient permissions to access this page.', 'wp-delete-comments' ) );
 }
 
-// Process form submission if the request is POST.
+// If the form is submitted, handle the deletion logic.
 if ( isset( $_POST['wp_delete_comments_action'] ) && check_admin_referer( 'wp_delete_comments_nonce' ) ) {
-    // Retrieve the choice of comment status from form.
+    // Retrieve the chosen comment status from the form.
     $selected_option = sanitize_text_field( $_POST['wp_delete_comments_selection'] ?? '' );
 
-    // Load the comment deletion logic (see includes/comment-deleter.php).
+    // Require the file that contains our deletion logic.
     require_once plugin_dir_path( __FILE__ ) . '../includes/comment-deleter.php';
 
-    // Call a function to delete comments of the selected type.
-    wp_delete_comments_by_status( $selected_option );
+    // Delete comments based on the selected status.
+    $deleted_count = wp_delete_comments_by_status( $selected_option );
 
-    // Provide feedback to the user (optional).
-    echo '<div class="notice notice-success"><p>Comments deleted for type: ' . esc_html( $selected_option ) . '</p></div>';
+    // Provide feedback to the user.
+    echo sprintf(
+        '<div class="notice notice-success is-dismissible"><p>%d comments have been deleted for type: <strong>%s</strong>.</p></div>',
+        $deleted_count,
+        esc_html( $selected_option )
+    );
 }
 ?>
 
@@ -29,7 +33,7 @@ if ( isset( $_POST['wp_delete_comments_action'] ) && check_admin_referer( 'wp_de
     <form method="POST">
         <?php wp_nonce_field( 'wp_delete_comments_nonce' ); ?>
 
-        <p>Select which comments to delete:</p>
+        <p><?php esc_html_e( 'Select which comments to delete:', 'wp-delete-comments' ); ?></p>
 
         <label>
             <input type="radio" name="wp_delete_comments_selection" value="all" checked>
@@ -56,6 +60,11 @@ if ( isset( $_POST['wp_delete_comments_action'] ) && check_admin_referer( 'wp_de
             <?php esc_html_e( 'Trashed Comments', 'wp-delete-comments' ); ?>
         </label><br><br>
 
-        <input type="submit" name="wp_delete_comments_action" class="button button-primary" value="<?php esc_attr_e( 'Delete Comments', 'wp-delete-comments' ); ?>">
+        <input
+            type="submit"
+            name="wp_delete_comments_action"
+            class="button button-primary"
+            value="<?php esc_attr_e( 'Delete Comments', 'wp-delete-comments' ); ?>"
+        />
     </form>
 </div>
