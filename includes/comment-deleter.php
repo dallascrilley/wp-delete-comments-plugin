@@ -6,8 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Delete comments based on the provided status.
  *
- * @param string $status The comment status to delete. Possible values:
- *                       'all', 'moderation', 'approved', 'spam', 'trash'.
+ * @param string $status The comment status to delete: 'all', 'moderation', 'approved', 'spam', 'trash'.
  * @return int           The number of comments deleted.
  */
 function wp_delete_comments_by_status( string $status ): int {
@@ -26,30 +25,39 @@ function wp_delete_comments_by_status( string $status ): int {
         'all'        => 'all',
     ];
 
-    // Default to 'all' if something unexpected is passed
+    // Default to 'all' if something unexpected is passed.
     $wp_status = $status_map[$status] ?? 'all';
 
-    // Retrieve all comments matching the chosen status
+    // Use 'any' to get absolutely everything when user picks 'all'
     $args = [
-        'status' => $wp_status,
+        'status' => ( $wp_status === 'all' ) ? 'any' : $wp_status,
         'number' => 0, // 0 = no limit
     ];
 
-    // For 'all', WordPress might skip spam/trash. Use 'any' to be absolutely certain:
-    if ( $wp_status === 'all' ) {
-        $args['status'] = 'any';
-    }
-
-    $comments = get_comments( $args );
-    $deleted_count = 0;
+    $comments       = get_comments( $args );
+    $deleted_count  = 0;
 
     foreach ( $comments as $comment ) {
-        // The second parameter "true" means force deletion without trashing
-        $result = wp_delete_comment( $comment->comment_ID, true );
-        if ( $result ) {
+        // The second param "true" force-deletes without trashing
+        if ( wp_delete_comment( $comment->comment_ID, true ) ) {
             $deleted_count++;
         }
     }
 
     return $deleted_count;
+}
+
+/**
+ * Enable or disable all future comments.
+ *
+ * @param bool $disable Set to true to disable future comments; false to enable.
+ */
+function wp_set_future_comments_status( bool $disable ): void {
+    if ( $disable ) {
+        update_option( 'default_comment_status', 'closed' );
+        update_option( 'default_ping_status', 'closed' );
+    } else {
+        update_option( 'default_comment_status', 'open' );
+        update_option( 'default_ping_status', 'open' );
+    }
 }

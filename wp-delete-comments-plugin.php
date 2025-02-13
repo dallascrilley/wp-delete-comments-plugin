@@ -2,9 +2,9 @@
 /**
  * Plugin Name: Delete All Comments from Wordpress Posts
  * Plugin URI: https://dallascrilley.com
- * Description: Plugin to delete all or specific types of comments from a Wordpress website.
+ * Description: Plugin to delete all or specific types of comments from a Wordpress website and optionally disable all future comments.
  * Author: Dallas Crilley
- * Version: 1.0
+ * Version: 1.1
  * Author URI: https://dallascrilley.com
  */
 
@@ -20,7 +20,7 @@ function wp_delete_comments_plugin_menu(): void {
         'tools.php',                     // Parent slug
         'WP Delete Comments',            // Page title
         'WP Delete Comments',            // Menu title
-        'manage_options',                // Capability
+        'manage_options',                // Required capability
         'wp_delete_comments_plugin',     // Menu slug
         'wp_delete_comments_plugin_page' // Callback function
     );
