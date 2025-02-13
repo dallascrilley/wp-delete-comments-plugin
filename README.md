@@ -1,10 +1,10 @@
 # Delete All Comments from WordPress Posts
 
 **Contributors:** dallascrilley  
-**Tags:** comments, moderation, spam, trash  
+**Tags:** comments, moderation, spam, trash, disable comments
 **Requires at least:** 5.0  
 **Tested up to:** 6.7.2  
-**Stable tag:** 1.0  
+**Stable tag:** 1.1.0
 **License:** GPLv2 or later  
 **License URI:** [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)
 
@@ -14,11 +14,14 @@ Delete all or specific types of comments from your WordPress website via a simpl
 
 This plugin adds a page under **Tools > WP Delete Comments** to enable deleting:
 
+1. Delete all or specific types of comments:
 - All comments
 - Moderation/Pending comments
 - Approved comments
 - Spam comments
 - Trashed comments
+
+2. Optionally disable future comments (so new posts won’t accept comments).
 
 ## Installation
 
@@ -34,7 +37,13 @@ Yes. The plugin calls `wp_delete_comment(..., true)`, which removes comments per
 ### Is there any confirmation prompt?
 Currently, there's no separate confirmation prompt. Please use at your own risk and test on a staging site.
 
+### How do I re-enable future comments?
+Simply uncheck the "Disable all future comments" box and submit again.
+
 ## Changelog
+
+### 1.1
+- Feature: Option to disable all future comments from the same admin page
 
 ### 1.0
 - Initial Release
